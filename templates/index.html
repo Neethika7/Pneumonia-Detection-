@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pneumonia Detection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url("/static/bg1.jpg");
+            background-repeat: no-repeat;
+            background-size: cover; /* Ensures the image covers the entire background */
+            background-attachment: fixed;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #fff;
+            margin-bottom: 25px;
+        }
+        form {
+            background:  rgba(255,255,255,0.3);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+        input[type="file"] {
+            margin: 5px 15px;
+            border: 2px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        input[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #fff;
+        }
+    </style>
+    <script>
+        async function uploadImage(event) {
+            event.preventDefault();  // Prevent the form from submitting normally
+
+            const formData = new FormData(document.querySelector('form'));
+            const response = await fetch('/predict', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            document.getElementById('result').innerText = result.error ? 
+                `Error: ${result.error}` : 
+                `Prediction: ${result.prediction}`;
+        }
+    </script>
+</head>
+<body>
+    <h1>Pneumonia Detection from Chest X-ray Images</h1>
+    <form onsubmit="uploadImage(event)" enctype="multipart/form-data">
+        <input type="file" name="image" accept="image/*" required />
+        <input type="submit" value="Upload Image" />
+    </form>
+    <div id="result"></div>
+</body>
+</html>
+
+
+
